@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Каталог</title>
-	<link rel="stylesheet" href="static/style.css">
-	<link rel="stylesheet" href="static/fonts/font-awesome/css/font-awesome.css">
-</head>
-<body>
-	<div class="container">
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}
+	{{ title|title }}
+{% endblock %}
+
+		{% block menu %}
 		<div class="hero-white">
 			<div class="header clearfix">
 				<a href="index.html" class="logo"></a>
-				<ul class="menu">
-					<li><a href="index.html">домой</a></li>
-					<li><a href="products.html" class="active">продукты</a></li>
-					<li><a href="contact.html">контакты</a></li>
-
-				</ul>
+					{% include 'mainapp/includes/inc_main_menu.html' %}
 				<a href="#" class="search"></a>
                 <a href="#" class="basket"></a>
 			</div>
@@ -24,33 +16,29 @@
 
 		<div class="details">
 			<div class="links clearfix">
-				<ul class="links-menu">
-					<li><a href="#" class="active">все</a></li>
-					<li><a href="#">дом</a></li>
-					<li><a href="#">офис</a></li>
-					<li><a href="#">модерн</a></li>
-					<li><a href="#">классика</a></li>
-				</ul>
+				{% include 'mainapp/includes/inc_categories_menu.html' %}
 			</div>
+		{% endblock %}
 
+		{% block content %}
 			<div class="details-products">
 				<div class="details-slider">
 					<div class="slider-product">
-						<img src="img/slider1.jpg">
+						<img src="/static/img/slider1.jpg">
 					</div>
 					<div class="slider-control">
 						<div class="block">
-							<a href="#"><img src="img/controll.jpg" alt="">
+							<a href="#"><img src="/static/img/controll.jpg" alt="">
 								<div class="text"></div>
 							</a>
 						</div>
 						<div class="block">
-							<a href="#"><img src="img/controll1.jpg" alt="">
+							<a href="#"><img src="/static/img/controll1.jpg" alt="">
 								<div class="text"></div>
 							</a>
 						</div>
 						<div class="block">
-							<a href="#"><img src="img/controll2.jpg" alt="">
+							<a href="#"><img src="/static/img/controll2.jpg" alt="">
 								<div class="text"></div>
 							</a>
 						</div>
@@ -78,31 +66,31 @@
 			<div class="related">
 				<div class="title clearfix">
 					<h2>Похожие продукты</h2>
-					<a class="explore" href="#">показать все <img src="img/arrow.png" alt=""></a>
+					<a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
 				</div>
 				<div class="related-products clearfix">
 					<div class="block">
-						<a href="#"><img src="img/product-11.jpg" alt="">
+						<a href="#"><img src="/static/img/product-11.jpg" alt="">
 							<div class="text">
-								<img src="img/icon-hover.png" alt="img">
+								<img src="/static/img/icon-hover.png" alt="img">
 								<h4>Стул повышенного качества</h4>
 								<p>Не оторваться. </p>
 							</div>
 						</a>
 					</div>
 					<div class="block">
-						<a href="#"><img src="img/product-21.jpg" alt="">
+						<a href="#"><img src="/static/img/product-21.jpg" alt="">
 							<div class="text">
-								<img src="img/icon-hover.png" alt="img">
+								<img src="/static/img/icon-hover.png" alt="img">
 								<h4>Стул повышенного качества</h4>
 								<p>Не оторваться. </p>
 							</div>
 						</a>
 					</div>
 					<div class="block">
-						<a href="#"><img src="img/product-31.jpg" alt="">
+						<a href="#"><img src="/static/img/product-31.jpg" alt="">
 							<div class="text">
-								<img src="img/icon-hover.png" alt="img">
+								<img src="/static/img/icon-hover.png" alt="img">
 								<h4>Стул повышенного качества</h4>
 								<p>Не оторваться. </p>
 							</div>
@@ -114,35 +102,4 @@
 		</div>
 
 		<div class="clr"></div>
-
-	</div>	
-
-	<div class="footer">
-        <div class="clearfix">
-            <div class="text-footer">
-                <h3>контакты</h3>
-            </div>
-            <div class="text-footer">
-                <h3>полезная информация</h3>
-            </div>
-            <div class="text-footer clearfix">
-                <h3>Оставайтесь на связи</h3>
-                <p>Подписаться на новости и рассылки</p>
-                <form>
-                    <input type="email" name="email" placeholder="ваш email">
-                    <a href="#"><i class="fa fa-paper-plane fa-2x" aria-hidden="true"></i></a>
-                </form>
-            </div>
-        </div>
-        <p class="small">&copy; GB 2017</p>
-        <div class="social">
-            <a href="#" class="social1"></a>
-            <a href="#" class="social2"></a>
-            <a href="#" class="social3"></a>
-            <a href="#" class="social4"></a>
-        </div>
-        <p class="small">Положения &amp; Условия  /  Конфиденциальность &amp; Cookies</p>
-    </div>	
-
-</body>
-</html>
+		{% endblock %}
