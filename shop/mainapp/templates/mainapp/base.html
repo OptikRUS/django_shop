@@ -5,16 +5,15 @@
 	<meta charset="utf-8">
 	<title>
         {% block title %}
-			{{ title|title }}
+			{{ page_title|default:"магазин"|title }}
 		{% endblock %}
     </title>
 	{% block css %}
-	<link rel="stylesheet" href="{% static 'style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.css' %}">
 	{% endblock %}
 
 	{% block js %}
-
 	{% endblock %}
 </head>
 <body>
@@ -28,9 +27,8 @@
 		{% block content %}
 
 		{% endblock %}
-
+        <div class="clr"></div>
 	</div>
-
     <div class="footer">
         <div class="clearfix">
             <div class="text-footer">
@@ -57,6 +55,5 @@
         </div>
         <p class="small">Положения &amp; Условия  /  Конфиденциальность &amp; Cookies</p>
     </div>
-
 </body>
 </html>
