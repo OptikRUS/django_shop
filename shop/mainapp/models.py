@@ -5,7 +5,7 @@ class ProductCategory(models.Model):
     name = models.CharField('имя', max_length=64)
     description = models.TextField('описание', blank=True)
     short_desc = models.CharField('краткое описание', max_length=200, blank=True)
-    href = models.CharField('href', max_length=64)
+    slug = models.SlugField('href')
 
     def __str__(self):
         return f'{self.name}'
