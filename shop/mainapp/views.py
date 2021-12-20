@@ -1,16 +1,10 @@
 from django.shortcuts import render
-import json
 
 # Create your views here.
 from mainapp.models import ProductCategory
 
-# with open('links.json', 'r', encoding='utf-8') as f:
-#     links_menu = json.load(f)
 
-submenu = ProductCategory.objects.all()
-
-
-def main(request):
+def index(request):
     content = {
         'page_title': 'Главная',
     }
@@ -18,10 +12,19 @@ def main(request):
 
 
 def products(request):
+    categories = ProductCategory.objects.all()
     content = {
         'page_title': 'Продукты',
-        # 'links_menu': links_menu,
-        'submenu': submenu,
+        'categories': categories,
+    }
+    return render(request, 'mainapp/products.html', content)
+
+
+def category(request, slug):
+    categories = ProductCategory.objects.all()
+    content = {
+        'page_title': 'Продукты',
+        'categories': categories,
     }
     return render(request, 'mainapp/products.html', content)
 
