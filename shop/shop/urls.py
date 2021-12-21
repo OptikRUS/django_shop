@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from mainapp.views import index, products, contact, category
+from mainapp.views import index, products, contact
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,10 +26,8 @@ urlpatterns = [
 
     path('', index, name='main'),
     path('products/', products, name='products'),
+    path('products/<slug:slug>', products, name='products'),
     path('contact/', contact, name='contact'),
-
-    path('category/<slug:slug>/', category, name='category'),
-
 ]
 
 if settings.DEBUG:

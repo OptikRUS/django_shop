@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from mainapp.models import ProductCategory
@@ -11,19 +11,17 @@ def index(request):
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request):
-    categories = ProductCategory.objects.all()
+def products(request, slug=None):
+    categories = ProductCategory.objects.filter()
+
+    if not slug:
+        selected_category = None
+    else:
+        selected_category = get_object_or_404(ProductCategory, slug=slug)
+
     content = {
         'page_title': 'Продукты',
-        'categories': categories,
-    }
-    return render(request, 'mainapp/products.html', content)
-
-
-def category(request, slug):
-    categories = ProductCategory.objects.all()
-    content = {
-        'page_title': 'Продукты',
+        'selected_category': selected_category,
         'categories': categories,
     }
     return render(request, 'mainapp/products.html', content)

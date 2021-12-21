@@ -1,7 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
 
-from authapp.models import ShopUser
-
 
 class ShopUserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):

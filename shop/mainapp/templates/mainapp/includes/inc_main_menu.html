@@ -7,7 +7,7 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'products' %}" class = "{% if 'products' in request.resolver_match.url_name %} active {% endif %}">
+                <a href="{% url 'products' %}" class = "{% if 'products' == request.resolver_match.url_name %} active {% endif %}">
                     продукты
                 </a>
             </li>
