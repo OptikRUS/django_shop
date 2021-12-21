@@ -15,7 +15,7 @@ def login(request):
             if user and user.is_active:
                 auth.login(request, user)  # cookie creation
                 # return HttpResponseRedirect('/')
-                return HttpResponseRedirect(reverse('main'))
+                return HttpResponseRedirect(reverse('main:main'))
     else:
         form = ShopUserLoginForm()
     context = {
@@ -27,4 +27,4 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect(reverse('main'))
+    return HttpResponseRedirect(reverse('main:main'))
