@@ -16,6 +16,13 @@
                     Контакты
                 </a>
             </li>
+                {% if user.is_authenticated %}
+                   <li>
+                <a href="{% url 'auth:edit' %}">
+                   {{ user.first_name|default:'пользователь'|capfirst }}
+                </a>
+            </li>
+                {% endif %}
             <li>
                 {% if user.is_authenticated %}
                     <a href="{% url 'auth:logout' %}">
