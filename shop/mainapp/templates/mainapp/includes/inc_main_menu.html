@@ -36,5 +36,7 @@
             </li>
         </ul>
     <a href="#" class="search"></a>
-    <a href="{% url 'basket:index' %}" class="basket"></a>
+    <a href="{% url 'basket:index' %}" class="basket">
+        {% if count %} ({{ count }}) {% endif %}
+    </a>
 </div>
