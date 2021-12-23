@@ -11,7 +11,7 @@ class ShopUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=True)
 
     def basket_price(self):
-        return sum(el.product.price for el in self.basket.all())
+        return sum(el.product_cost for el in self.basket.all())
 
     def basket_count(self):
         return sum(el.qty for el in self.basket.all())
