@@ -1,9 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
-from basketapp.models import BasketItem
 from mainapp.models import ProductCategory, Product
-from django.db.models import Sum
 
 
 def get_menu():
@@ -26,7 +24,6 @@ def products(request):
 
 
 def category(request, slug=None):
-    count = BasketItem.objects.filter(user_id=request.user).aggregate(total=Sum('qty'))['total']
     if not slug or slug == 'all':
         category = {'slug': 'all', 'name': 'все'}
         products = Product.objects.all()
@@ -39,7 +36,7 @@ def category(request, slug=None):
         'category': category,
         'categories': get_menu(),
         'products': products,
-        'count': count,
+
     }
     return render(request, 'mainapp/category.html', content)
 
