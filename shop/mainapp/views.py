@@ -11,6 +11,10 @@ def get_hot_product():
     return choice(Product.objects.all())
 
 
+def same_products(hot_product):
+    return Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+
+
 def index(request):
     content = {
         'page_title': 'Главная',
@@ -19,12 +23,24 @@ def index(request):
 
 
 def products(request):
+    hot_product = get_hot_product()
     content = {
         'page_title': 'Продукты',
         'categories': get_menu(),
-        'hot_product': get_hot_product(),
+        'hot_product': hot_product,
+        'same_products': same_products(hot_product),
     }
     return render(request, 'mainapp/products.html', content)
+
+
+def product_page(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    content = {
+        'page_title': 'страница продукта',
+        'categories': get_menu(),
+        'product': product,
+    }
+    return render(request, 'mainapp/product_page.html', content)
 
 
 def category(request, slug=None):
