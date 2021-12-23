@@ -1,11 +1,14 @@
+from random import choice
 from django.shortcuts import render, get_object_or_404
-
-# Create your views here.
 from mainapp.models import ProductCategory, Product
 
 
 def get_menu():
     return ProductCategory.objects.filter()
+
+
+def get_hot_product():
+    return choice(Product.objects.all())
 
 
 def index(request):
@@ -19,6 +22,7 @@ def products(request):
     content = {
         'page_title': 'Продукты',
         'categories': get_menu(),
+        'hot_product': get_hot_product(),
     }
     return render(request, 'mainapp/products.html', content)
 
