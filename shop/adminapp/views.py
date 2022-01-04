@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
+from django.views.generic import CreateView
 
 from adminapp.forms import AdminShopUserUpdateForm
 from mainapp.models import ProductCategory
@@ -57,3 +58,10 @@ def categories(request):
         'category_list': ProductCategory.objects.all()
     }
     return render(request, 'adminapp/categories.html', context=content)
+
+
+class ProductCategoryCreate(CreateView):
+    model = ProductCategory
+    fields = '__all__'
+    success_url = reverse_lazy('new_admin:categories')
+    template_name = 'adminapp/product_category_create.html'

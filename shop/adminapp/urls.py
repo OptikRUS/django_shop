@@ -10,4 +10,5 @@ urlpatterns = [
     path('user/update/<int:user_pk>/', adminapp.user_update, name='user_update'),
 
     path('categories/', adminapp.categories, name='categories'),
+    path('category/create/', adminapp.ProductCategoryCreate.as_view(), name='category_create'),
 ]
