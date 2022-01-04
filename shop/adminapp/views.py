@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
-from adminapp.forms import AdminShopUserUpdateForm
+from adminapp.forms import AdminShopUserUpdateForm, ProductCategoryCreationForm
 from mainapp.models import ProductCategory
 
 
@@ -62,6 +62,11 @@ def categories(request):
 
 class ProductCategoryCreate(CreateView):
     model = ProductCategory
-    fields = '__all__'
+    form_class = ProductCategoryCreationForm
     success_url = reverse_lazy('new_admin:categories')
-    template_name = 'adminapp/product_category_create.html'
+
+
+class ProductCategoryUpdate(UpdateView):
+    model = ProductCategory
+    form_class = ProductCategoryCreationForm
+    success_url = reverse_lazy('new_admin:categories')

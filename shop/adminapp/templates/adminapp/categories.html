@@ -9,7 +9,7 @@
         {% for category in category_list %}
             <div class="user_record {% if not category.is_active %}not_active{% endif %}">
                 <div class="user_role">
-                    <a href="{#% url 'myadmin:user_update' category.pk %#}"
+                    <a href="{% url 'new_admin:category_update' category.slug %}"
                        class="btn btn-primary">
                         редактировать
                     </a>
