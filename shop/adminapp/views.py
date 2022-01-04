@@ -19,22 +19,29 @@ def index(request):
     return render(request, 'adminapp/index.html', content)
 
 
-@user_passes_test(lambda user: user.is_superuser)
-def user_update(request, user_pk):
-    user = get_object_or_404(get_user_model(), pk=user_pk)
-    if request.method == 'POST':
-        user_form = AdminShopUserUpdateForm(request.POST, request.FILES, instance=user)
-        if user_form.is_valid():
-            user_form.save()
-            return HttpResponseRedirect(reverse('new_admin:index'))
-    else:
-        user_form = AdminShopUserUpdateForm(instance=user)
+# @user_passes_test(lambda user: user.is_superuser)
+# def user_update(request, user_pk):
+#     user = get_object_or_404(get_user_model(), pk=user_pk)
+#     if request.method == 'POST':
+#         user_form = AdminShopUserUpdateForm(request.POST, request.FILES, instance=user)
+#         if user_form.is_valid():
+#             user_form.save()
+#             return HttpResponseRedirect(reverse('new_admin:index'))
+#     else:
+#         user_form = AdminShopUserUpdateForm(instance=user)
+#
+#     context = {
+#         'page_title': 'админка/пользователи/редактирование',
+#         'form': user_form
+#     }
+#     return render(request, 'adminapp/shopuser_form.html', context)
 
-    context = {
-        'page_title': 'админка/пользователи/редактирование',
-        'form': user_form
-    }
-    return render(request, 'adminapp/user_update.html', context)
+
+class ShopUserAdminUpdate(UpdateView):
+    model = get_user_model()
+    form_class = AdminShopUserUpdateForm
+    success_url = reverse_lazy('new_admin:index')
+    pk_url_kwarg = 'user_pk'
 
 
 def user_delete(request, user_pk):
