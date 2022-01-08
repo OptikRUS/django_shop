@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.forms import ModelForm
+from django.forms import ModelForm, HiddenInput
 
 from authapp.forms import ShopUserChangeForm
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
 
 
 class AdminShopUserUpdateForm(ShopUserChangeForm):
@@ -13,7 +13,7 @@ class AdminShopUserUpdateForm(ShopUserChangeForm):
                   'is_staff', 'is_superuser', 'is_active')
 
 
-class ProductCategoryCreationForm(ModelForm):
+class AdminProductCategoryCreationForm(ModelForm):
     class Meta:
         model = ProductCategory
         fields = '__all__'
@@ -22,3 +22,16 @@ class ProductCategoryCreationForm(ModelForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = f'form-control {field_name}'
+
+
+class AdminProductUpdateForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'category':    # спрятать выбор категории при  создании товара
+                field.widget = HiddenInput()
