@@ -5,6 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from adminapp.forms import AdminShopUserUpdateForm, AdminProductCategoryCreationForm, AdminProductUpdateForm
 from mainapp.models import ProductCategory, Product
@@ -12,7 +13,15 @@ from mainapp.models import ProductCategory, Product
 
 @user_passes_test(lambda user: user.is_superuser)
 def index(request):
+    page_num = request.GET.get('page', 1)
     all_users = get_user_model().objects.all()
+    users_paginator = Paginator(all_users, 2)
+    try:
+        all_users = users_paginator.page(page_num)
+    except PageNotAnInteger:
+        all_users = users_paginator.page(1)
+    except EmptyPage:
+        all_users = users_paginator.page(users_paginator.num_pages)
     content = {
         'page_title': 'админка/пользователи',
         'all_users': all_users,

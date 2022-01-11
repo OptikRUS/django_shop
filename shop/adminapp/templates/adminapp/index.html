@@ -7,6 +7,19 @@
         <a href="{#% url 'myadmin:user_create' %#}" class="btn btn-primary new_user">
             новый пользователь
         </a>
+        <div class="paginator">
+                    {% if all_users.has_previous %}
+                        <a href="{% url 'new_admin:index' %}?page={{ all_users.previous_page_number }}">
+                            <strong><</strong>
+                        </a>
+                    {% endif %}
+                    <span class="current">страница {{ all_users.number }} из {{ all_users.paginator.num_pages }} </span>
+                    {% if all_users.has_next %}
+                        <a href="{% url 'new_admin:index' %}?page={{ all_users.next_page_number }}">
+                            <strong>></strong>
+                        </a>
+                    {% endif %}
+                </div>
         {% for shop_user in all_users %}
             <div class="user_record {% if not shop_user.is_active %}not_active{% endif %}">
                 <img src="{{ shop_user.avatar|media_folder_users}}"
