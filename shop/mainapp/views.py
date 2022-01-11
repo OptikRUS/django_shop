@@ -5,10 +5,6 @@ from random import choice
 from mainapp.models import ProductCategory, Product
 
 
-def get_menu():
-    return ProductCategory.objects.filter()
-
-
 def get_hot_product():
     return choice(Product.objects.all())
 
@@ -28,7 +24,6 @@ def products(request):
     hot_product = get_hot_product()
     content = {
         'page_title': 'Продукты',
-        'categories': get_menu(),
         'hot_product': hot_product,
         'same_products': same_products(hot_product),
     }
@@ -39,7 +34,6 @@ def product_page(request, pk):
     product = get_object_or_404(Product, pk=pk)
     content = {
         'page_title': 'страница продукта',
-        'categories': get_menu(),
         'product': product,
     }
     return render(request, 'mainapp/product_page.html', content)
@@ -65,7 +59,6 @@ def category(request, slug=None):
     content = {
         'page_title': 'категории',
         'category': category,
-        'categories': get_menu(),
         'products': products,
 
     }

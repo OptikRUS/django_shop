@@ -3,6 +3,7 @@ from authapp.forms import ShopUserLoginForm, ShopUserCreationForm, ShopUserChang
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 
 def login(request):
@@ -37,8 +38,13 @@ def register(request):
     if request.method == 'POST':
         form = ShopUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('auth:login'))
+            user = form.save(commit=False)
+            user.is_active = False
+            user.set_activation_key()
+            user.save()
+            if not user.send_confirm_email():
+                return HttpResponseRedirect(reverse('auth:register'))
+            return HttpResponseRedirect(reverse('main:main'))
     else:
         form = ShopUserCreationForm()
 
@@ -64,3 +70,12 @@ def edit(request):
         'form': form,
     }
     return render(request, 'authapp/update.html', context)
+
+
+def verify(request, email, activation_key):
+    user = get_user_model().objects.get(email=email)
+    if user.activation_key == activation_key and not user.is_activation_key_expired:
+        user.is_active = True
+        user.save()
+        auth.login(request, user)
+    return render(request, 'authapp/verification.html')
