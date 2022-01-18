@@ -18,7 +18,7 @@ class ShopUser(AbstractUser):
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'), blank=True)
-    activation_key = models.CharField(max_length=128, blank=True)
+    # activation_key = models.CharField(max_length=128, blank=True)
 
     def basket_price(self):
         return sum(el.product_cost for el in self.basket.all())

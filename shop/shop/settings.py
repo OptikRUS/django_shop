@@ -9,10 +9,14 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import json
 import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import django.contrib.auth.backends
+import social_core.backends.google
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -41,6 +45,8 @@ INSTALLED_APPS = [
     'authapp',
     'basketapp',
     'adminapp',
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -157,3 +163,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/email-messages/'
 
 ACTIVATION_KEY_TTL = 48
+
+# social auth
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+)
+
+SOCIAL_SECRETS_FILE = 'shop/social_auth.json'
+
+SOCIAL = {}
+if os.path.exists(SOCIAL_SECRETS_FILE):
+    with open('shop/social_auth.json', 'r') as f:
+        SOCIAL = json.load(f)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = SOCIAL.get('client_id', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = SOCIAL.get('client_secret', '')
