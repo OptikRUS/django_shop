@@ -14,8 +14,8 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import django.contrib.auth.backends
-import social_core.backends.google
+# import django.contrib.auth.backends
+# import social_core.backends.google
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
