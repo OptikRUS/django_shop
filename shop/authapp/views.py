@@ -17,7 +17,7 @@ def login(request):
             user = auth.authenticate(username=username, password=password)
             if user and user.is_active:
                 auth.login(request, user)  # cookie creation
-                if redirect_to:
+                if not redirect_to:
                     return HttpResponseRedirect(redirect_to or reverse('main:main'))
     else:
         form = ShopUserLoginForm()
