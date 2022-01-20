@@ -35,17 +35,7 @@ class ShopUser(AbstractUser):
         self.activation_key = hashlib.sha1((self.email + salt).encode('utf8')).hexdigest()
 
     def send_confirm_email(self):
-        verify_link = reverse('auth:verify', kwargs={
-            'email': self.email,
-            'activation_key': self.activation_key})
-
-        subject = f'Подтверждение учётной записи {self.username}'
-        message = f'Для подтверждения учётной записи {self.username} ' \
-                  f'на портале {DOMAIN_NAME} перейдите по ссылке: \n{DOMAIN_NAME}{verify_link}'
-
-        return send_mail(subject, message, EMAIL_HOST_USER, [self.email], fail_silently=False)
-
-    """
+        """
         Easy wrapper for sending a single message to a recipient list. All members
         of the recipient list will see the other recipients in the 'To' field.
 
@@ -56,3 +46,27 @@ class ShopUser(AbstractUser):
         Note: The API for this method is frozen. New code wanting to extend the
         functionality should use the EmailMessage class directly.
         """
+        verify_link = reverse('auth:verify', kwargs={
+            'email': self.email,
+            'activation_key': self.activation_key})
+
+        subject = f'Подтверждение учётной записи {self.username}'
+        message = f'Для подтверждения учётной записи {self.username} ' \
+                  f'на портале {DOMAIN_NAME} перейдите по ссылке: \n{DOMAIN_NAME}{verify_link}'
+
+        return send_mail(subject, message, EMAIL_HOST_USER, [self.email], fail_silently=False)
+
+
+class ShopUserProfile(models.Model):
+    MALE = 'M'
+    FEMALE = 'W'
+
+    GENDER_CHOICES = (
+        (MALE, 'мужской'),
+        (FEMALE, 'женский'),
+    )
+
+    user = models.OneToOneField(ShopUser, primary_key=True, on_delete=models.CASCADE)
+    tagline = models.CharField(verbose_name='теги', max_length=128, blank=True)
+    about_me = models.TextField(verbose_name='о себе', blank=True)
+    gender = models.CharField(verbose_name='пол', max_length=1, choices=GENDER_CHOICES, blank=True)
