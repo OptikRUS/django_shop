@@ -27,6 +27,10 @@ class Order(models.Model):
     def is_forming(self):
         return self.status == self.STATUS_FORMNING
 
+    def set_paid_status(self):
+        self.status = self.STATUS_PAID
+        self.save()
+
     @property
     def total_quantity(self):
         return sum(map(lambda x: x.qty, self.items.all()))

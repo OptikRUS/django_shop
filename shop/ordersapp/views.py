@@ -104,3 +104,15 @@ class OrderUpdate(UpdateView):
 
         return order
 
+
+class FormingComplete(UpdateView):
+    model = Order
+    form_class = OrderForm
+    success_url = reverse_lazy('orders:index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = self.get_object()
+        order.set_paid_status()
+        order.save()
+        return context
