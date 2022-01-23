@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, ListView, UpdateView
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
+from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 from django.db import transaction
+from django.http import HttpResponseRedirect
 
 from ordersapp.forms import OrderForm, OrderItemForm
 from ordersapp.models import Order, OrderItem
@@ -116,3 +117,20 @@ class FormingComplete(UpdateView):
         order.set_paid_status()
         order.save()
         return context
+
+
+class OrderDetail(DetailView):
+    model = Order
+
+
+class OrderDelete(DeleteView):
+    model = Order
+    success_url = reverse_lazy('orders:index')
+
+
+def order_forming_complete(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    order.status = Order.STATUS_PAID
+    order.save()
+
+    return HttpResponseRedirect(reverse('orders:index'))
