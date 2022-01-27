@@ -21,6 +21,13 @@ class OrderForm(BaseOrderForm):
 
 class OrderItemForm(BaseOrderForm):
     price = forms.FloatField(required=False)
+
+    # def clean_qty(self):
+    #     qty = self.cleaned_data.get('qty')
+    #     if qty > self.instance.product.quantity:
+    #         raise forms.ValidationError('На складе больше нет товара')
+    #     return qty
+
     class Meta:
         model = OrderItem
         fields = '__all__'

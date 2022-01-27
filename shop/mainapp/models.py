@@ -16,9 +16,9 @@ class ProductCategory(models.Model):
         verbose_name_plural = 'категории продукта'
         ordering = ['name']
 
-    # def delete(self, using=None, keep_parents=False): # убирает "конкретное" удаление
-    #     self.is_active = False
-    #     self.save(using=using)
+    def delete(self, using=None, keep_parents=False):  # убирает "конкретное" удаление
+        self.is_active = False
+        self.save(using=using)
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
