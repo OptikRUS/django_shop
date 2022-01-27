@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import HiddenInput
 
+from mainapp.models import Product
 from ordersapp.models import Order, OrderItem
 
 
@@ -22,11 +23,17 @@ class OrderForm(BaseOrderForm):
 class OrderItemForm(BaseOrderForm):
     price = forms.FloatField(required=False)
 
-    # def clean_qty(self):
-    #     qty = self.cleaned_data.get('qty')
-    #     if qty > self.instance.product.quantity:
-    #         raise forms.ValidationError('На складе больше нет товара')
-    #     return qty
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.get_items()
+
+    #  ошибку не выдает, но и не сохраняет, если товара на складе недостаточно
+    def clean_qty(self):
+        qty = self.cleaned_data.get('qty')
+        product = self.cleaned_data.get('product')
+        if qty > product.quantity:
+            raise forms.ValidationError('недостаточно на складе!')
+        return qty
 
     class Meta:
         model = OrderItem
