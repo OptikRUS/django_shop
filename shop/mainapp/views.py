@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
 
 from random import choice
 from mainapp.models import ProductCategory, Product
@@ -88,3 +89,9 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', content)
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.filter(pk=pk).first()
+        return JsonResponse({'price': product and product.price or 0})
