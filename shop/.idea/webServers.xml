@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="41e72d3d-e730-43f9-916d-842c7e1de3b9" name="sand">
+        <fileTransfer rootFolder="/home/optikrus" accessType="SFTP" host="192.168.1.108" port="22" sshConfigId="f2d1f2e6-635d-49f1-b173-8c3eded84964" sshConfig="optikrus@192.168.1.108:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
