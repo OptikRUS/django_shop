@@ -6,11 +6,11 @@ from mainapp.models import ProductCategory, Product
 
 
 def get_hot_product():
-    return choice(Product.objects.all())
+    return choice(Product.objects.filter(category__is_active=True, is_active=True))
 
 
 def same_products(hot_product):
-    return Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+    return Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
 
 
 def index(request):
@@ -43,10 +43,10 @@ def category(request, slug=None):
     page_num = request.GET.get('page', 1)
     if not slug or slug == 'all':
         category = {'slug': 'all', 'name': 'все'}
-        products = Product.objects.all()
+        products = Product.objects.filter(category__is_active=True, is_active=True)
     else:
         category = get_object_or_404(ProductCategory, slug=slug)
-        products = category.product_set.all()
+        products = category.product_set.filter(is_active=True)
 
     products_paginator = Paginator(products, 3)
     try:
