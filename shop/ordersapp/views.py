@@ -21,6 +21,11 @@ class OrderList(ListView):
     def get_queryset(self):
         return self.request.user.orders.all()
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Заказы'
+        return context
+
 
 class OrderCreate(CreateView):
     model = Order
@@ -57,6 +62,7 @@ class OrderCreate(CreateView):
                 formset = OrderFormSet()
 
         context['orderitems'] = formset
+        context['page_title'] = 'Создание заказа'
         return context
 
     def form_valid(self, form):
@@ -94,6 +100,7 @@ class OrderUpdate(UpdateView):
                 if instance.pk:
                     form.initial['price'] = instance.product.price
         context['orderitems'] = formset
+        context['page_title'] = 'Редактирование заказа'
         return context
 
     def form_valid(self, form):
@@ -128,10 +135,20 @@ class FormingComplete(UpdateView):
 class OrderDetail(DetailView):
     model = Order
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Просмотр заказа'
+        return context
+
 
 class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('orders:index')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Удаление заказа'
+        return context
 
 
 def order_forming_complete(request, pk):
