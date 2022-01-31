@@ -20,6 +20,7 @@ class ProductCategory(models.Model):
         self.is_active = False
         self.save(using=using)
 
+
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     name = models.CharField('имя', max_length=64)
