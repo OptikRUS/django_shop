@@ -22,7 +22,7 @@ class Order(models.Model):
     add_dt = models.DateTimeField('время', auto_now_add=True)
     update_dt = models.DateTimeField('время', auto_now=True)
     status = models.CharField('статус', max_length=1, choices=STATUS_CHOICES, default=STATUS_FORMNING)
-    is_active = models.BooleanField(verbose_name='активен', default=True)
+    is_active = models.BooleanField(verbose_name='активен', default=True, db_index=True)
 
     @cached_property
     def total_items(self):

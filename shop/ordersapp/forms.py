@@ -25,7 +25,7 @@ class OrderItemForm(BaseOrderForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.get_items()
+        self.fields['product'].queryset = Product.get_items().select_related()
 
     #  ошибку не выдает, но и не сохраняет, если товара на складе недостаточно
     def clean_qty(self):
