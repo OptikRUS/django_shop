@@ -61,7 +61,8 @@ MIDDLEWARE = [
 if DEBUG:
     INSTALLED_APPS.extend(
         ['debug_toolbar',
-         'template_profiler_panel', ]
+         'template_profiler_panel',
+         'django_extensions', ]
     )
     MIDDLEWARE.append(
         'debug_toolbar.middleware.DebugToolbarMiddleware',

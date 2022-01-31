@@ -6,6 +6,8 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete
+from django.utils.decorators import method_decorator
+from django.contrib.auth .decorators import user_passes_test
 
 from ordersapp.forms import OrderForm, OrderItemForm
 from ordersapp.models import Order, OrderItem
@@ -14,8 +16,13 @@ from ordersapp.models import Order, OrderItem
 # def index(request):
 #     return render(request, 'ordersapp/index.html')
 
+class LoggedUserOnlyMixin:
+    @method_decorator(user_passes_test(lambda user: user.is_authenticated))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-class OrderList(ListView):
+
+class OrderList(LoggedUserOnlyMixin, ListView):
     model = Order
 
     def get_queryset(self):
@@ -27,7 +34,7 @@ class OrderList(ListView):
         return context
 
 
-class OrderCreate(CreateView):
+class OrderCreate(LoggedUserOnlyMixin, CreateView):
     model = Order
     form_class = OrderForm
     success_url = reverse_lazy('orders:index')
@@ -83,7 +90,7 @@ class OrderCreate(CreateView):
         return order
 
 
-class OrderUpdate(UpdateView):
+class OrderUpdate(LoggedUserOnlyMixin, UpdateView):
     model = Order
     form_class = OrderForm
     success_url = reverse_lazy('orders:index')
@@ -119,7 +126,7 @@ class OrderUpdate(UpdateView):
         return order
 
 
-class FormingComplete(UpdateView):
+class FormingComplete(LoggedUserOnlyMixin, UpdateView):
     model = Order
     form_class = OrderForm
     success_url = reverse_lazy('orders:index')
@@ -132,7 +139,7 @@ class FormingComplete(UpdateView):
         return context
 
 
-class OrderDetail(DetailView):
+class OrderDetail(LoggedUserOnlyMixin, DetailView):
     model = Order
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -141,7 +148,7 @@ class OrderDetail(DetailView):
         return context
 
 
-class OrderDelete(DeleteView):
+class OrderDelete(LoggedUserOnlyMixin, DeleteView):
     model = Order
     success_url = reverse_lazy('orders:index')
 

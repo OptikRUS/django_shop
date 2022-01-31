@@ -1,0 +1,14 @@
+http://192.168.1.108/
+http://192.168.1.108/products/
+http://192.168.1.108/contact/
+http://192.168.1.108/category/home/
+http://192.168.1.108/category/classic/
+http://192.168.1.108/category/modern/
+http://192.168.1.108/category/office/
+http://192.168.1.108/basket/
+http://192.168.1.108/orders/
+http://192.168.1.108/auth/user/edit/
+http://192.168.1.108/orders/update/1/
+http://192.168.1.108/orders/update/2/
+http://192.168.1.108/orders/update/33/
+http://192.168.1.108/orders/update/34/

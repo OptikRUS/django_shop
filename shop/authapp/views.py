@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.decorators import login_required
 
 from authapp.forms import ShopUserLoginForm, ShopUserCreationForm, ShopUserChangeForm, ShopUserProfileChangeForm
 from authapp.models import ShopUser, ShopUserProfile
@@ -34,6 +35,7 @@ def login(request):
     return render(request, 'authapp/login.html', content)
 
 
+@login_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('main:main'))
@@ -60,6 +62,7 @@ def register(request):
     return render(request, 'authapp/register.html', context)
 
 
+@login_required
 def edit(request):
     if request.method == 'POST':
         form = ShopUserChangeForm(request.POST, request.FILES, instance=request.user)
