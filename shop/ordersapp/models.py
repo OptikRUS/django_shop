@@ -19,9 +19,9 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='orders')
-    add_dt = models.DateTimeField('время', auto_now_add=True)
+    add_dt = models.DateTimeField('время', auto_now_add=True, db_index=True)
     update_dt = models.DateTimeField('время', auto_now=True)
-    status = models.CharField('статус', max_length=1, choices=STATUS_CHOICES, default=STATUS_FORMNING)
+    status = models.CharField('статус', max_length=1, choices=STATUS_CHOICES, default=STATUS_FORMNING, db_index=True)
     is_active = models.BooleanField(verbose_name='активен', default=True, db_index=True)
 
     @cached_property
