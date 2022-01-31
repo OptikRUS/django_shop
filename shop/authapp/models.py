@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.utils.timezone import now
+from django.utils.functional import cached_property
 
 from shop.settings import DOMAIN_NAME, EMAIL_HOST_USER, ACTIVATION_KEY_TTL
 
@@ -20,11 +21,16 @@ class ShopUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=True)
     activation_key = models.CharField(max_length=128, blank=True)
 
+    @cached_property  # используется только в методе без агрументов(только self)
+    def basket_items(self):
+        # return self.basket.all()
+        return self.basket.select_related('product').all()
+
     def basket_price(self):
-        return sum(el.product_cost for el in self.basket.all())
+        return sum(el.product_cost for el in self.basket_items)
 
     def basket_count(self):
-        return sum(el.qty for el in self.basket.all())
+        return sum(el.qty for el in self.basket_items)
 
     @property
     def is_activation_key_expired(self):
