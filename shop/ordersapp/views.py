@@ -174,3 +174,9 @@ def product_quantity_update_save(sender, instance, **kwargs):
     else:
         instance.product.quantity -= instance.qty
     instance.product.save()
+
+
+@receiver(pre_delete, sender=OrderItem)
+def product_quantity_update_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.qty
+    instance.product.save()
