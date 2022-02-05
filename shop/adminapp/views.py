@@ -6,8 +6,9 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import F
 
-from adminapp.forms import AdminShopUserUpdateForm, AdminProductCategoryCreationForm, AdminProductUpdateForm
+from adminapp.forms import AdminShopUserUpdateForm, AdminProductCategoryCreationForm, AdminProductUpdateForm, AdminProductCategoryEditForm
 from mainapp.models import ProductCategory, Product
 
 
@@ -109,7 +110,15 @@ class ProductCategoryUpdate(SuperUserOnlyMixin, PageTitleMixin, UpdateView):
     model = ProductCategory
     form_class = AdminProductCategoryCreationForm
     success_url = reverse_lazy('new_admin:categories')
-    page_title = 'Категории/редактирование/'
+    page_title = 'категории/редактирование'
+    form_class = AdminProductCategoryEditForm
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+            return super().form_valid(form)
 
 
 class ProductCategoryDelete(SuperUserOnlyMixin, PageTitleMixin, DeleteView):

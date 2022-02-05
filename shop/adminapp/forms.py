@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm, HiddenInput
+from django import forms
 
 from authapp.forms import ShopUserChangeForm
 from mainapp.models import ProductCategory, Product
@@ -35,3 +36,12 @@ class AdminProductUpdateForm(ModelForm):
             field.widget.attrs['class'] = 'form-control'
             if field_name == 'category':    # спрятать выбор категории при  создании товара
                 field.widget = HiddenInput()
+
+
+class AdminProductCategoryEditForm(ModelForm):
+    discount = forms.IntegerField(label='скидка', required=False, min_value=0, max_value=90, initial=0)
+
+    class Meta:
+        model = ProductCategory
+        # fields = '__all__'
+        exclude = ()
