@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 from django.core.cache import cache
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from django.db import connection
 from django.views.decorators.cache import cache_page, never_cache
 
 from random import choice
@@ -122,3 +125,22 @@ def get_product_price(request, pk):
     if request.is_ajax():
         product = Product.objects.filter(pk=pk).first()
         return JsonResponse({'price': product and product.price or 0})
+
+
+def db_profile_by_type(sender, q_type, queries):
+    print(f'db_profile {q_type} for {sender}:')
+    for query in filter(lambda x: q_type in x['sql'], queries):
+        print(query['sql'])
+
+
+@receiver(pre_save, sender=ProductCategory)
+def update_product_category_save(sender, instance, **kwargs):
+    """
+    зависимость активности товаров от активности категорий
+    """
+    if instance.pk:
+        if instance.is_active:
+            instance.product_set.update(is_active=True)
+        else:
+            instance.product_set.update(is_active=False)
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
