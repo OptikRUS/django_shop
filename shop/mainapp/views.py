@@ -25,10 +25,10 @@ def get_category(slug):
         key = f'category_{slug}'
         products = cache.get(key)
         if products is None:
-            products = Product.get_items().filter(category_id=slug)
+            products = Product.get_items().filter(category__slug=slug)
             cache.set(key, products)
         return products
-    return Product.get_items().filter(category_id=slug)
+    return Product.get_items().filter(category__slug=slug)
 
 
 def get_hot_product():
@@ -66,7 +66,6 @@ def product_page(request, pk):
     return render(request, 'mainapp/product_page.html', content)
 
 
-# @cache_page(3600)
 def category(request, slug=None):
     page_num = request.GET.get('page', 1)
     if not slug or slug == 'all':
@@ -74,7 +73,7 @@ def category(request, slug=None):
         products = get_products()
     else:
         category = get_object_or_404(ProductCategory, slug=slug)
-        products = get_category(category)  # если тут передать slug, то всё ломается
+        products = get_category(slug)
 
     products_paginator = Paginator(products, 3)
     try:
@@ -93,6 +92,7 @@ def category(request, slug=None):
     return render(request, 'mainapp/category.html', content)
 
 
+# @cache_page(3600)
 def contact(request):
     locations = [
         {'city': 'Москва',
