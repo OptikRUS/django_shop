@@ -2,8 +2,8 @@
     <ul class="links-menu">
         {% for item in categories %}
         <li>
-            <a href="{% url 'main:products' item.slug %}"
-               class = "{% if selected_category and selected_category.id == item.id %} active {% endif %}">
+            <a href="{% url 'main:category' item.slug %}"
+               class = "{% if category and category.slug == item.slug %} active {% endif %}">
                 {{ item.name }}
             </a>
         </li>

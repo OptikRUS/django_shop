@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
+
+
+def get_menu():
+    return ProductCategory.objects.filter()
 
 
 def index(request):
@@ -11,20 +15,30 @@ def index(request):
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request, slug=None):
-    categories = ProductCategory.objects.filter()
-
-    if not slug:
-        selected_category = None
-    else:
-        selected_category = get_object_or_404(ProductCategory, slug=slug)
-
+def products(request):
     content = {
         'page_title': 'Продукты',
-        'selected_category': selected_category,
-        'categories': categories,
+        'categories': get_menu(),
     }
     return render(request, 'mainapp/products.html', content)
+
+
+def category(request, slug=None):
+    if not slug or slug == 'all':
+        category = {'slug': 'all', 'name': 'все'}
+        products = Product.objects.all()
+    else:
+        category = get_object_or_404(ProductCategory, slug=slug)
+        products = category.product_set.all()
+
+    content = {
+        'page_title': 'категории',
+        'category': category,
+        'categories': get_menu(),
+        'products': products,
+
+    }
+    return render(request, 'mainapp/category.html', content)
 
 
 def contact(request):
