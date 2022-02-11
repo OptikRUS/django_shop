@@ -6,6 +6,7 @@ class ProductCategory(models.Model):
     description = models.TextField('описание', blank=True)
     short_desc = models.CharField('краткое описание', max_length=200, blank=True)
     slug = models.SlugField('slug')
+    is_active = models.BooleanField('активность', default=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -15,6 +16,9 @@ class ProductCategory(models.Model):
         verbose_name_plural = 'категории продукта'
         ordering = ['name']
 
+    # def delete(self, using=None, keep_parents=False): # убирает "конкретное" удаление
+    #     self.is_active = False
+    #     self.save(using=using)
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
@@ -24,6 +28,7 @@ class Product(models.Model):
     short_desc = models.CharField('краткое описание', max_length=200, blank=True)
     price = models.DecimalField('цена', max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveIntegerField('количество на складе', default=0)
+    is_active = models.BooleanField('активность', default=True)
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
