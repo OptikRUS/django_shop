@@ -1,10 +1,12 @@
-<ul class="links-menu">
-    {% for link in submenu %}
-    <li>
-        <a href="{% url link.slug %}"
-           class = "{% if request.resolver_match.url_name == link.slug %} active {% endif %}">
-            {{ link.name }}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="links clearfix">
+    <ul class="links-menu">
+        {% for item in categories %}
+        <li>
+            <a href="{% url 'main:products' item.slug %}"
+               class = "{% if selected_category and selected_category.id == item.id %} active {% endif %}">
+                {{ item.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

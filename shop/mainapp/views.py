@@ -1,27 +1,28 @@
-from django.shortcuts import render
-import json
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from mainapp.models import ProductCategory
 
-# with open('links.json', 'r', encoding='utf-8') as f:
-#     links_menu = json.load(f)
 
-submenu = ProductCategory.objects.all()
-
-
-def main(request):
+def index(request):
     content = {
         'page_title': 'Главная',
     }
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request):
+def products(request, slug=None):
+    categories = ProductCategory.objects.filter()
+
+    if not slug:
+        selected_category = None
+    else:
+        selected_category = get_object_or_404(ProductCategory, slug=slug)
+
     content = {
         'page_title': 'Продукты',
-        # 'links_menu': links_menu,
-        'submenu': submenu,
+        'selected_category': selected_category,
+        'categories': categories,
     }
     return render(request, 'mainapp/products.html', content)
 

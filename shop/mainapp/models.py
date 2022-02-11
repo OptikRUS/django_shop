@@ -5,7 +5,7 @@ class ProductCategory(models.Model):
     name = models.CharField('имя', max_length=64)
     description = models.TextField('описание', blank=True)
     short_desc = models.CharField('краткое описание', max_length=200, blank=True)
-    slug = models.SlugField('href')
+    slug = models.SlugField('slug')
 
     def __str__(self):
         return f'{self.name}'
@@ -14,6 +14,7 @@ class ProductCategory(models.Model):
         verbose_name = 'категорияя продукта'
         verbose_name_plural = 'категории продукта'
         ordering = ['name']
+
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
