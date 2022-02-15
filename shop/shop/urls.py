@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('social/', include('social_django.urls', namespace='social')),
+
     path('auth/', include('authapp.urls', namespace='auth')),
     path('basket/', include('basketapp.urls', namespace='basket')),
     path('new/admin/', include('adminapp.urls', namespace='new_admin')),
