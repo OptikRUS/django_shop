@@ -18,17 +18,32 @@
             </li>
                 {% if user.is_authenticated %}
                    <li>
-                <a href="{% url 'auth:edit' %}">
-                   {{ user.first_name|default:'пользователь'|capfirst }}
-                </a>
-            </li>
+                       <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                                {{ user.first_name|default:"пользователь"|title }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{% url 'auth:edit' %}">
+                                        профиль
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'orders:index' %}">
+                                        заказы
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 {% endif %}
                 {% if user.is_superuser %}
                    <li>
-                <a href="{% url 'new_admin:index' %}">
-                   Админка
-                </a>
-            </li>
+                        <a href="{% url 'new_admin:index' %}">
+                           Админка
+                        </a>
+                   </li>
                 {% endif %}
             <li>
                 {% if user.is_authenticated %}
