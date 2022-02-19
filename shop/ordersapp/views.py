@@ -4,6 +4,8 @@ from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 from django.db import transaction
 from django.http import HttpResponseRedirect
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, pre_delete
 
 from ordersapp.forms import OrderForm, OrderItemForm
 from ordersapp.models import Order, OrderItem
@@ -87,6 +89,10 @@ class OrderUpdate(UpdateView):
             formset = OrderFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
             formset = OrderFormSet(instance=self.object)
+            for form in formset.forms:
+                instance = form.instance
+                if instance.pk:
+                    form.initial['price'] = instance.product.price
         context['orderitems'] = formset
         return context
 
@@ -132,5 +138,13 @@ def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.STATUS_PAID
     order.save()
-
     return HttpResponseRedirect(reverse('orders:index'))
+
+
+@receiver(pre_save, sender=OrderItem)
+def product_quantity_update_save(sender, instance, **kwargs):
+    if instance.pk:
+        instance.product.quantity += sender.objects.get(pk=instance.pk).qty - instance.qty
+    else:
+        instance.product.quantity -= instance.qty
+    instance.product.save()

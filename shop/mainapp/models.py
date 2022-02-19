@@ -16,9 +16,9 @@ class ProductCategory(models.Model):
         verbose_name_plural = 'категории продукта'
         ordering = ['name']
 
-    # def delete(self, using=None, keep_parents=False): # убирает "конкретное" удаление
-    #     self.is_active = False
-    #     self.save(using=using)
+    def delete(self, using=None, keep_parents=False):  # убирает "конкретное" удаление
+        self.is_active = False
+        self.save(using=using)
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
@@ -32,6 +32,10 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
+
+    @classmethod
+    def get_items(cls):
+        return cls.objects.filter(is_active=True, category__is_active=True)
 
     class Meta:
         verbose_name = 'продукт'

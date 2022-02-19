@@ -39,10 +39,12 @@ class Order(models.Model):
     def total_cost(self):
         return sum(map(lambda x: x.product_cost, self.items.all()))
 
-    # переопределяем метод, удаляющий объект
+    # возвращает на склад при удалении заказа
     def delete(self, using=None, keep_parents=False):
-        self.is_active = False
-        self.save()
+        for item in self.items.all():
+            item.product.quantity += item.qty
+            item.product.save()
+        super().delete()
 
     class Meta:
         ordering = ('-add_dt',)

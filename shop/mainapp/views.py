@@ -1,16 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
 
 from random import choice
 from mainapp.models import ProductCategory, Product
 
 
 def get_hot_product():
-    return choice(Product.objects.all())
+    return choice(Product.get_items().filter(category__is_active=True, is_active=True))
 
 
 def same_products(hot_product):
-    return Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+    return Product.get_items().filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
 
 
 def index(request):
@@ -43,10 +44,10 @@ def category(request, slug=None):
     page_num = request.GET.get('page', 1)
     if not slug or slug == 'all':
         category = {'slug': 'all', 'name': 'все'}
-        products = Product.objects.all()
+        products = Product.get_items().filter(category__is_active=True, is_active=True)
     else:
         category = get_object_or_404(ProductCategory, slug=slug)
-        products = category.product_set.all()
+        products = category.product_set.filter(is_active=True)
 
     products_paginator = Paginator(products, 3)
     try:
@@ -88,3 +89,9 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', content)
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.filter(pk=pk).first()
+        return JsonResponse({'price': product and product.price or 0})
