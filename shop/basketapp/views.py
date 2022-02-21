@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from basketapp.models import BasketItem
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.db.models import F
+
 from shop.settings import LOGIN_URL
+from basketapp.models import BasketItem
 
 
 @login_required
@@ -20,16 +22,11 @@ def index(request):
 @login_required
 def add(request, product_pk):
     if LOGIN_URL in request.META.get('HTTP_REFERER'):  # если есть логин, то переходим на страницу продукта
-        return HttpResponseRedirect(
-            reverse(
-                'main:product_page',
-                kwargs={'pk': product_pk}))
-    basket_item, _ = BasketItem.objects.get_or_create(
-        user=request.user,
-        product_id=product_pk,
-    )
-    basket_item.qty += 1
-    basket_item.save()
+        return HttpResponseRedirect(reverse('main:product_page', kwargs={'pk': product_pk}))
+    basket_item, _ = BasketItem.objects.get_or_create(user=request.user, product_id=product_pk)
+    # basket_item.qty += 1
+    basket_item.qty += F('qty') + 1
+    # basket_item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

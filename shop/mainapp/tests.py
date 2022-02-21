@@ -1,3 +1,49 @@
 from django.test import TestCase
+from django.test.client import Client
+from django.urls import reverse
 
-# Create your tests here.
+from mainapp.models import Product, ProductCategory
+
+
+class TestMainappSmoke(TestCase):
+    fixtures = ['mainapp.json']
+
+    @classmethod
+    def setUpClass(cls):  # once
+        super().setUpClass()
+        cls.client = Client()
+
+    # @classmethod
+    # def tearDownClass(cls):  # once
+    #     pass
+
+    # def setUp(self):  # before each test!!!
+    #     self.client = Client()
+
+    def test_mainapp_urls(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/contact/')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('main:products'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_product_category_urls(self):
+        response = self.client.get(
+            reverse('main:category',
+                    kwargs={'slug': 'all'})
+        )
+        self.assertEqual(response.status_code, 200)
+        for category in ProductCategory.objects.all():
+            response = self.client.get(
+                reverse('main:category',
+                        kwargs={'slug': category.slug})
+            )
+            self.assertEqual(response.status_code, 200)
+
+    def test_product_urls(self):
+        for product in Product.objects.all():
+            response = self.client.get(f'/product/{product.pk}/')
+            self.assertEqual(response.status_code, 200)
