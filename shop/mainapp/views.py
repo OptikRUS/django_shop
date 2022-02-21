@@ -1,17 +1,42 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page, never_cache
 
 from random import choice
 from mainapp.models import ProductCategory, Product
+from shop import settings
+
+
+def get_products():
+    if settings.LOW_CACHE:
+        key = 'products'
+        products = cache.get(key)
+        if products is None:
+            products = Product.get_items()
+            cache.set(key, products)
+        return products
+    return Product.get_items()
+
+
+def get_category(slug):
+    if settings.LOW_CACHE:
+        key = f'category_{slug}'
+        products = cache.get(key)
+        if products is None:
+            products = Product.get_items().filter(category_id=slug)
+            cache.set(key, products)
+        return products
+    return Product.get_items().filter(category_id=slug)
 
 
 def get_hot_product():
-    return choice(Product.get_items().filter(category__is_active=True, is_active=True))
+    return choice(get_products().filter(category__is_active=True, is_active=True))
 
 
 def same_products(hot_product):
-    return Product.get_items().filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
+    return get_products().filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
 
 
 def index(request):
@@ -31,6 +56,7 @@ def products(request):
     return render(request, 'mainapp/products.html', content)
 
 
+# @never_cache
 def product_page(request, pk):
     product = get_object_or_404(Product, pk=pk)
     content = {
@@ -40,14 +66,15 @@ def product_page(request, pk):
     return render(request, 'mainapp/product_page.html', content)
 
 
+# @cache_page(3600)
 def category(request, slug=None):
     page_num = request.GET.get('page', 1)
     if not slug or slug == 'all':
         category = {'slug': 'all', 'name': 'все'}
-        products = Product.get_items().filter(category__is_active=True, is_active=True)
+        products = get_products()
     else:
         category = get_object_or_404(ProductCategory, slug=slug)
-        products = category.product_set.filter(is_active=True)
+        products = get_category(category)  # если тут передать slug, то всё ломается
 
     products_paginator = Paginator(products, 3)
     try:

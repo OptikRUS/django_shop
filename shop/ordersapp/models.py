@@ -28,7 +28,7 @@ class Order(models.Model):
     def total_items(self):
         return self.items.select_related().all()
 
-    @property
+    @cached_property
     def is_forming(self):
         return self.status == self.STATUS_FORMNING
 
@@ -36,11 +36,11 @@ class Order(models.Model):
         self.status = self.STATUS_PAID
         self.save()
 
-    @property
+    @cached_property
     def total_quantity(self):
         return sum(map(lambda x: x.qty, self.total_items))
 
-    @property
+    @cached_property
     def total_cost(self):
         return sum(map(lambda x: x.product_cost, self.total_items))
 
@@ -62,6 +62,6 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField('количество', default=0)
 
-    @property
+    @cached_property
     def product_cost(self):
         return self.product.price * self.qty
