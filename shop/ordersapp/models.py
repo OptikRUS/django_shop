@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.functional import cached_property
 
 from mainapp.models import Product
 
@@ -18,10 +19,14 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='orders')
-    add_dt = models.DateTimeField('время', auto_now_add=True)
+    add_dt = models.DateTimeField('время', auto_now_add=True, db_index=True)
     update_dt = models.DateTimeField('время', auto_now=True)
-    status = models.CharField('статус', max_length=1, choices=STATUS_CHOICES, default=STATUS_FORMNING)
-    is_active = models.BooleanField(verbose_name='активен', default=True)
+    status = models.CharField('статус', max_length=1, choices=STATUS_CHOICES, default=STATUS_FORMNING, db_index=True)
+    is_active = models.BooleanField(verbose_name='активен', default=True, db_index=True)
+
+    @cached_property
+    def total_items(self):
+        return self.items.select_related().all()
 
     @property
     def is_forming(self):
@@ -33,15 +38,15 @@ class Order(models.Model):
 
     @property
     def total_quantity(self):
-        return sum(map(lambda x: x.qty, self.items.all()))
+        return sum(map(lambda x: x.qty, self.total_items))
 
     @property
     def total_cost(self):
-        return sum(map(lambda x: x.product_cost, self.items.all()))
+        return sum(map(lambda x: x.product_cost, self.total_items))
 
     # возвращает на склад при удалении заказа
     def delete(self, using=None, keep_parents=False):
-        for item in self.items.all():
+        for item in self.total_items:
             item.product.quantity += item.qty
             item.product.save()
         super().delete()
